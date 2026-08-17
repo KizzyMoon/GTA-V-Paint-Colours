@@ -10,8 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="picker.css">
   <script src="colors.js?v=2" defer></script>
   <script src="app.js?v=2" defer></script>
+  <script src="picker.js?v=1" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -22,6 +24,7 @@
     <nav class="tabs" aria-label="Catalogue views">
       <button class="tab is-active" data-view="all" type="button">All colours</button>
       <button class="tab" data-view="favorites" type="button">Favourites <span id="favouriteCount">0</span></button>
+      <button class="tab" data-view="picker" type="button">Image picker</button>
     </nav>
   </header>
 
@@ -38,10 +41,81 @@
       </div>
     </section>
 
+    <section id="pickerView" class="picker-view" hidden>
+      <div class="picker-heading">
+        <div>
+          <p class="eyebrow">Photo colour matching</p>
+          <h2>Pick a colour from any image</h2>
+          <p>Paste a screenshot, upload a photo or drop one below. Then click the exact area you want to match.</p>
+        </div>
+        <span class="private-badge">Processed on your device</span>
+      </div>
+
+      <div class="picker-workspace">
+        <div class="image-panel">
+          <div class="picker-toolbar">
+            <label class="upload-button" for="imageUpload">Upload image</label>
+            <input id="imageUpload" type="file" accept="image/*" hidden>
+            <span>or press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste</span>
+            <button id="replaceImage" type="button" hidden>Choose another</button>
+          </div>
+          <div id="imageDropZone" class="image-drop-zone">
+            <div id="pickerPlaceholder" class="picker-placeholder">
+              <div class="upload-icon" aria-hidden="true">＋</div>
+              <strong>Paste, upload or drop an image</strong>
+              <span>PNG, JPG, WEBP and screenshots work</span>
+            </div>
+            <div id="canvasStage" class="canvas-stage" hidden>
+              <canvas id="pickerCanvas" aria-label="Uploaded image colour picker"></canvas>
+              <span id="sampleMarker" class="sample-marker" hidden></span>
+            </div>
+          </div>
+          <p id="pickerError" class="picker-error" role="alert"></p>
+        </div>
+
+        <aside id="pickerResults" class="picker-results" hidden>
+          <p class="eyebrow">Selected colour</p>
+          <div class="sample-comparison">
+            <div>
+              <span id="sampledSwatch" class="result-swatch"></span>
+              <small>From image</small>
+              <strong id="sampledHex"></strong>
+              <em id="sampledRgb"></em>
+            </div>
+            <span class="conversion-arrow">→</span>
+            <div>
+              <span id="adjustedSwatch" class="result-swatch"></span>
+              <small>FiveM adjusted</small>
+              <strong id="adjustedHex"></strong>
+              <em id="adjustedRgb"></em>
+            </div>
+          </div>
+          <div id="matchVerdict" class="match-verdict"></div>
+          <div class="picker-copy-row">
+            <button id="copyAdjustedHex" type="button">Copy adjusted HEX</button>
+            <button id="copyAdjustedRgb" type="button">Copy RGB</button>
+          </div>
+          <div class="picker-code">
+            <code id="pickerCode"></code>
+            <button id="copyPickerCode" type="button">Copy code</button>
+          </div>
+          <p class="picker-note">This compensation is an estimate based on Rockstar's shader curve. Server lighting, reshades and vehicle materials can still alter the result.</p>
+        </aside>
+      </div>
+
+      <div id="closestSection" class="closest-section" hidden>
+        <div class="closest-heading">
+          <div><h3>Closest catalogue colours</h3><p>Compared against the estimated in-game appearance, not just the darker input HEX.</p></div>
+        </div>
+        <div id="closestMatches" class="closest-matches"></div>
+      </div>
+    </section>
+
+    <div id="catalogueView">
     <section class="control-panel" aria-label="Colour filters">
       <div class="search-wrap">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.35-4.35m2.35-5.65A8 8 0 1 1 3 11a8 8 0 0 1 16 0Z"/></svg>
-        <input id="searchInput" type="search" placeholder="Search name, HEX, RGB or paint ID…" autocomplete="off">
+        <input id="searchInput" type="search" placeholder="Search colour, manufacturer, HEX, RGB or pearl…" autocomplete="off">
         <kbd>/</kbd>
       </div>
 
@@ -79,6 +153,7 @@
       <p id="emptyText">Try changing your filters or search.</p>
       <button id="emptyAction" type="button">Clear filters</button>
     </section>
+    </div>
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
