@@ -154,7 +154,7 @@ main { max-width: 1540px; padding: 0 24px 70px; }
 .paint-count small { margin-top: 18px; color: #7d899a; }
 .finish-preview { z-index: 1; display: grid; gap: 6px; }
 .finish-preview > strong { margin-bottom: 4px; font: 600 13px "Space Grotesk"; }
-.finish-preview span {
+.finish-preview button {
   height: 38px;
   display: flex;
   align-items: center;
@@ -165,11 +165,18 @@ main { max-width: 1540px; padding: 0 24px 70px; }
   color: #c5ccd6;
   background: rgba(9, 14, 21, .72);
   font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color .18s, background .18s, transform .18s;
 }
-.finish-preview span.is-selected { border-color: #8f51cf; color: #fff; }
+.finish-preview button:hover { border-color: #67507e; background: rgba(30, 20, 43, .82); transform: translateX(-2px); }
+.finish-preview button:focus-visible { outline: 2px solid #b778ff; outline-offset: 2px; }
+.finish-preview button.is-selected { border-color: #8f51cf; color: #fff; background: rgba(55, 29, 79, .82); box-shadow: 0 0 13px rgba(154, 75, 231, .16); }
 .finish-preview i { width: 11px; height: 11px; border-radius: 50%; background: #8b50e6; box-shadow: 0 0 10px #8b50e6; }
-.finish-preview span:nth-child(3) i { background: #8d98a8; box-shadow: none; }
-.finish-preview span:nth-child(4) i { background: linear-gradient(135deg, #fff, #8ea1ba); box-shadow: none; }
+.finish-preview button:nth-child(3) i { background: #8d98a8; box-shadow: none; }
+.finish-preview button:nth-child(4) i { background: linear-gradient(135deg, #fff, #8ea1ba); box-shadow: none; }
+.hero-showcase[data-finish="metallic"] .paint-orb { filter: saturate(.75) brightness(1.08); box-shadow: inset -22px -25px 33px rgba(0,0,0,.45), inset 18px 8px 22px rgba(220,230,255,.13), 0 34px 35px rgba(0,0,0,.55); }
+.hero-showcase[data-finish="pearlescent"] .paint-orb { filter: saturate(1.08) brightness(1.08); box-shadow: inset -22px -25px 33px rgba(0,0,0,.42), inset 16px 7px 25px rgba(242,215,255,.19), 0 34px 35px rgba(0,0,0,.55), 0 0 24px rgba(143,81,207,.16); }
 
 .control-panel {
   margin-top: 10px;
