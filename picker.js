@@ -12,8 +12,6 @@
   const results = document.getElementById("pickerResults");
   const closestSection = document.getElementById("closestSection");
   const closestMatches = document.getElementById("closestMatches");
-  const shaderStrength = document.getElementById("shaderStrength");
-  const shaderStrengthValue = document.getElementById("shaderStrengthValue");
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
   let currentAdjusted = null;
   let currentSampled = null;
@@ -59,21 +57,6 @@
       g:clamp(Math.floor(converted.g+(0-converted.g)*.04)),
       b:clamp(Math.floor(converted.b+(255-converted.b)*.04))
     };
-  }
-  function fiveMCustomRgb(target) {
-    const fullCorrection=pixelShader(target);
-    const mix=Number(shaderStrength.value)/100;
-    return {
-      r:Math.round(target.r+(fullCorrection.r-target.r)*mix),
-      g:Math.round(target.g+(fullCorrection.g-target.g)*mix),
-      b:Math.round(target.b+(fullCorrection.b-target.b)*mix)
-    };
-  }
-  function strengthDescription(value) {
-    if(value===0)return "0% · Direct RGB";
-    if(value<=35)return `${value}% · Balanced`;
-    if(value<=70)return `${value}% · Strong`;
-    return `${value}% · Crew-style`;
   }
   function pixelRegular(inputRgb) {
     const regular=[0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1];
@@ -175,8 +158,8 @@
     const nearest=matches[0];
     const close=nearest.distance<=7;
     document.getElementById("matchVerdict").innerHTML=close
-      ? `<strong>Close catalogue match found</strong>${nearest.maker} · ${nearest.name} is close to the selected area. Your custom FiveM RGB is still shown above.`
-      : `<strong>No close catalogue match</strong>Use the custom FiveM RGB above for the closest result, or choose one of these nearby catalogue colours.`;
+      ? `<strong>Close catalogue match found</strong>${nearest.maker} · ${nearest.name} is close to the selected area. The direct FiveM RGB is shown above.`
+      : `<strong>No close catalogue match</strong>Use the direct FiveM RGB above, or choose one of these nearby catalogue colours.`;
     closestMatches.innerHTML=matches.map(item=>`
       <button class="match-card" type="button" data-match-id="${item.id}">
         <span class="match-card-swatch" style="--match:${item.hex}"></span>
@@ -193,19 +176,14 @@
     if(typeof window.openDialog==="function") window.openDialog(Number(card.dataset.matchId));
   });
 
-  function renderFiveMValue(sampled) {
-    const adjusted=fiveMCustomRgb(sampled);
+  function renderOutputs(sampled) {
+    const adjusted=pixelShader(sampled);
     currentAdjusted=adjusted;
     document.getElementById("adjustedSwatch").style.setProperty("--result",toHex(adjusted));
     document.getElementById("adjustedHex").textContent=toHex(adjusted);
     document.getElementById("adjustedRgb").textContent=`${adjusted.r}, ${adjusted.g}, ${adjusted.b}`;
-    document.getElementById("pickerCode").textContent=`SetVehicleCustomPrimaryColour(vehicle, ${adjusted.r}, ${adjusted.g}, ${adjusted.b})`;
+    document.getElementById("pickerCode").textContent=`SetVehicleCustomPrimaryColour(vehicle, ${sampled.r}, ${sampled.g}, ${sampled.b})`;
   }
-
-  shaderStrength.addEventListener("input",()=>{
-    shaderStrengthValue.textContent=strengthDescription(Number(shaderStrength.value));
-    if(currentSampled)renderFiveMValue(currentSampled);
-  });
 
   canvas.addEventListener("click",event=>{
     const rect=canvas.getBoundingClientRect();
@@ -225,12 +203,14 @@
     document.getElementById("sampledSwatch").style.setProperty("--result",toHex(sampled));
     document.getElementById("sampledHex").textContent=toHex(sampled);
     document.getElementById("sampledRgb").textContent=`${sampled.r}, ${sampled.g}, ${sampled.b}`;
-    renderFiveMValue(sampled);
+    renderOutputs(sampled);
     results.hidden=false;
     renderMatches(sampled);
   });
 
-  document.getElementById("copyAdjustedHex").addEventListener("click",()=>currentAdjusted&&copy(toHex(currentAdjusted),"Adjusted HEX"));
-  document.getElementById("copyAdjustedRgb").addEventListener("click",()=>currentAdjusted&&copy(`${currentAdjusted.r}, ${currentAdjusted.g}, ${currentAdjusted.b}`,"Adjusted RGB"));
-  document.getElementById("copyPickerCode").addEventListener("click",()=>currentAdjusted&&copy(document.getElementById("pickerCode").textContent,"FiveM code"));
+  document.getElementById("copyDirectHex").addEventListener("click",()=>currentSampled&&copy(toHex(currentSampled),"Direct HEX"));
+  document.getElementById("copyDirectRgb").addEventListener("click",()=>currentSampled&&copy(`${currentSampled.r}, ${currentSampled.g}, ${currentSampled.b}`,"Direct RGB"));
+  document.getElementById("copyCrewHex").addEventListener("click",()=>currentAdjusted&&copy(toHex(currentAdjusted),"Crew HEX"));
+  document.getElementById("copyCrewRgb").addEventListener("click",()=>currentAdjusted&&copy(`${currentAdjusted.r}, ${currentAdjusted.g}, ${currentAdjusted.b}`,"Crew RGB"));
+  document.getElementById("copyPickerCode").addEventListener("click",()=>currentSampled&&copy(document.getElementById("pickerCode").textContent,"FiveM code"));
 })();
