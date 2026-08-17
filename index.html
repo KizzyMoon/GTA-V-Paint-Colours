@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#12151a">
+  <meta name="description" content="Browse, filter and save GTA V vehicle paint colours for FiveM.">
+  <title>GTA V Paint Colours</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="GTA V Paint Colours home">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span><strong>GTA V</strong><small>PAINT COLOURS</small></span>
+    </a>
+    <nav class="tabs" aria-label="Catalogue views">
+      <button class="tab is-active" data-view="all" type="button">All colours</button>
+      <button class="tab" data-view="favorites" type="button">Favourites <span id="favouriteCount">0</span></button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">FiveM paint reference</p>
+        <h1>Find the right colour.<br><span>Fast.</span></h1>
+        <p class="intro">Filter the native GTA V paint palette by colour family, finish or name. Save the ones you love and copy the exact values you need.</p>
+      </div>
+      <div class="hero-swatch" aria-hidden="true">
+        <div class="paint-orb"></div>
+        <span>161</span><small>native paints</small>
+      </div>
+    </section>
+
+    <section class="control-panel" aria-label="Colour filters">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.35-4.35m2.35-5.65A8 8 0 1 1 3 11a8 8 0 0 1 16 0Z"/></svg>
+        <input id="searchInput" type="search" placeholder="Search name, HEX, RGB or paint ID…" autocomplete="off">
+        <kbd>/</kbd>
+      </div>
+
+      <div class="filter-row">
+        <div>
+          <span class="filter-label">Colour family</span>
+          <div class="colour-filters" id="colourFilters"></div>
+        </div>
+        <div class="select-group">
+          <label for="finishFilter">Finish</label>
+          <select id="finishFilter">
+            <option value="all">All finishes</option>
+            <option value="metallic">Metallic</option>
+            <option value="matte">Matte</option>
+            <option value="utility">Utility</option>
+            <option value="worn">Worn</option>
+            <option value="special">Special</option>
+          </select>
+        </div>
+        <div class="select-group">
+          <label for="sortSelect">Sort by</label>
+          <select id="sortSelect">
+            <option value="id">Paint ID</option>
+            <option value="name">Name A–Z</option>
+            <option value="hue">Colour spectrum</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section class="results-heading">
+      <div><h2 id="viewTitle">All colours</h2><p id="resultsCount" aria-live="polite"></p></div>
+      <button id="clearFilters" class="clear-button" type="button">Clear filters</button>
+    </section>
+
+    <section id="colourGrid" class="colour-grid" aria-label="Paint colours"></section>
+    <section id="emptyState" class="empty-state" hidden>
+      <div class="empty-heart">♡</div>
+      <h2 id="emptyTitle">No colours found</h2>
+      <p id="emptyText">Try changing your filters or search.</p>
+      <button id="emptyAction" type="button">Clear filters</button>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="colourDialog">
+    <button class="dialog-close" type="button" aria-label="Close colour details">×</button>
+    <div class="dialog-swatch" id="dialogSwatch"></div>
+    <div class="dialog-content">
+      <p class="eyebrow" id="dialogFamily"></p>
+      <h2 id="dialogName"></h2>
+      <div class="detail-grid">
+        <button class="copy-detail" data-copy="hex" type="button"><span>HEX</span><strong id="dialogHex"></strong><em>Copy</em></button>
+        <button class="copy-detail" data-copy="rgb" type="button"><span>RGB</span><strong id="dialogRgb"></strong><em>Copy</em></button>
+        <div><span>PAINT ID</span><strong id="dialogId"></strong></div>
+        <div><span>FINISH</span><strong id="dialogFinish"></strong></div>
+      </div>
+      <div class="code-block"><code id="dialogCode"></code><button class="copy-code" type="button">Copy code</button></div>
+      <button class="dialog-favourite" type="button"><span>♡</span> Add to favourites</button>
+    </div>
+  </dialog>
+
+  <footer><p>Native GTA V vehicle paint data. Colours can look different depending on lighting, shaders and vehicle material in FiveM.</p></footer>
+  <script src="app.js"></script>
+</body>
+</html>
