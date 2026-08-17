@@ -47,7 +47,7 @@ function render(){
   buildFilters(); saveFavourites(); const list=filteredColours();
   const familyLabel=state.family==="all"?"":familyDefinitions.find(f=>f[0]===state.family)[1];
   const finishLabel=state.finish==="all"?"":state.finish[0].toUpperCase()+state.finish.slice(1);
-  els.viewTitle.textContent=state.view==="favorites"?"Your favourites":[finishLabel,familyLabel,"colours"].filter(Boolean).join(" ")||"All colours";
+  els.viewTitle.textContent=state.view==="favorites"?"Your favourites":finishLabel||familyLabel?[finishLabel,familyLabel,"colours"].filter(Boolean).join(" "):"All colours";
   els.resultsCount.textContent=`${list.length} ${list.length===1?"colour":"colours"} shown`;
   els.heroPaintCount.textContent=list.length.toLocaleString();
   document.querySelectorAll("[data-finish]").forEach(button=>{ const active=button.dataset.finish===state.finish; button.classList.toggle("is-selected",active); button.setAttribute("aria-pressed",String(active)); });
