@@ -11,15 +11,9 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="picker.css">
-  <style>
-    .shader-control{margin-top:16px;padding:12px;border:1px solid #323843;border-radius:10px;background:#111419}
-    .shader-control>div:first-child,.shader-scale{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .shader-control label{color:#d5d8de;font-size:10px;font-weight:700}.shader-control output{color:#b9a3df;font-size:9px}
-    .shader-control input{width:100%;margin:10px 0 5px;accent-color:#9c7bd3}.shader-scale{color:#69717d;font-size:8px}
-  </style>
   <script src="colors.js?v=2" defer></script>
   <script src="app.js?v=3" defer></script>
-  <script src="picker.js?v=3" defer></script>
+  <script src="picker.js?v=5" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -84,36 +78,30 @@
           <div class="sample-comparison">
             <div>
               <span id="sampledSwatch" class="result-swatch"></span>
-              <small>From image</small>
+              <small>Direct FiveM RGB</small>
               <strong id="sampledHex"></strong>
               <em id="sampledRgb"></em>
             </div>
             <span class="conversion-arrow">→</span>
             <div>
               <span id="adjustedSwatch" class="result-swatch"></span>
-              <small>FiveM RGB</small>
+              <small>Rockstar modified / crew</small>
               <strong id="adjustedHex"></strong>
               <em id="adjustedRgb"></em>
             </div>
           </div>
-          <div class="shader-control">
-            <div>
-              <label for="shaderStrength">Shader compensation</label>
-              <output id="shaderStrengthValue" for="shaderStrength">20% · Balanced</output>
-            </div>
-            <input id="shaderStrength" type="range" min="0" max="100" step="5" value="20">
-            <div class="shader-scale"><span>Direct RGB</span><span>Full crew correction</span></div>
-          </div>
           <div id="matchVerdict" class="match-verdict"></div>
           <div class="picker-copy-row">
-            <button id="copyAdjustedHex" type="button">Copy FiveM HEX</button>
-            <button id="copyAdjustedRgb" type="button">Copy RGB</button>
+            <button id="copyDirectHex" type="button">Copy direct HEX</button>
+            <button id="copyDirectRgb" type="button">Copy direct RGB</button>
+            <button id="copyCrewHex" type="button">Copy crew HEX</button>
+            <button id="copyCrewRgb" type="button">Copy crew RGB</button>
           </div>
           <div class="picker-code">
             <code id="pickerCode"></code>
             <button id="copyPickerCode" type="button">Copy code</button>
           </div>
-          <p class="picker-note">FiveM custom RGB and Rockstar crew colours use different pipelines. Balanced applies a light correction; move the slider left if your server makes it too dark.</p>
+          <p class="picker-note">Use the direct RGB with SetVehicleCustomPrimaryColour. The darker modified value follows GTA Colors' original Rockstar crew-colour formula and is shown separately so the two pipelines are not confused.</p>
         </aside>
       </div>
 
