@@ -20,7 +20,7 @@ function familyOf(colour){
   if(name.includes("pink"))return "pink"; if(name.includes("brown")||name.includes("beige")||name.includes("sand")||name.includes("tan")||name.includes("bronze")||name.includes("gold")||name.includes("cream")||name.includes("ivory")||name.includes("straw"))return "brown";
   if(h<15||h>=345)return "red"; if(h<45)return "orange"; if(h<68)return "yellow"; if(h<165)return "green"; if(h<250)return "blue"; if(h<292)return "purple"; if(h<345)return "pink"; return "red";
 }
-function normalise(colour){ const [r,g,b]=rgb(colour.hex); return {...colour,r,g,b,family:familyOf(colour),hue:hsl(colour.hex)[0]}; }
+function normalise(colour){ const [r,g,b]=rgb(colour.hex); return {...colour,maker:colour.maker.trim(),name:colour.name.trim(),r,g,b,family:familyOf(colour),hue:hsl(colour.hex)[0]}; }
 const catalogue=colours.map(normalise);
 
 function saveFavourites(){ localStorage.setItem("gta-oem-paint-favourites",JSON.stringify([...state.favourites])); els.favouriteCount.textContent=state.favourites.size; }
