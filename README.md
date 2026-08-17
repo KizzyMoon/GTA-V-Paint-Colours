@@ -7,6 +7,8 @@ A mobile-friendly GTA V/FiveM vehicle paint reference with:
 - manufacturer filtering and colour-spectrum sorting
 - persistent browser favourites with a dedicated tab
 - copyable HEX, RGB and FiveM code snippets
+- paste/upload image sampling with click-to-select colour areas
+- Rockstar shader compensation plus perceptual nearest-colour matching
 
 The catalogue contains 1,134 real manufacturer paint colours sourced from [GTA Colors](https://gtacolors.com), whose values are adjusted to match Rockstar shaders.
 
