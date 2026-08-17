@@ -11,9 +11,9 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="picker.css">
-  <link rel="stylesheet" href="design.css?v=1">
+  <link rel="stylesheet" href="design.css?v=2">
   <script src="colors.js?v=2" defer></script>
-  <script src="app.js?v=3" defer></script>
+  <script src="app.js?v=4" defer></script>
   <script src="picker.js?v=5" defer></script>
 </head>
 <body>
@@ -42,12 +42,12 @@
       </div>
       <div class="hero-showcase" aria-label="Paint finish preview">
         <div class="paint-orb" aria-hidden="true"></div>
-        <div class="paint-count"><strong>1,134</strong><span>PAINTS</span><small>◉</small></div>
-        <div class="finish-preview">
+        <div class="paint-count"><strong id="heroPaintCount">1,134</strong><span>PAINTS</span><small>◉</small></div>
+        <div class="finish-preview" aria-label="Filter by paint finish">
           <strong>Finish</strong>
-          <span class="is-selected"><i></i>Solid</span>
-          <span><i></i>Metallic</span>
-          <span><i></i>Pearlescent</span>
+          <button type="button" data-finish="solid" aria-pressed="false"><i></i>Solid</button>
+          <button type="button" data-finish="metallic" aria-pressed="false"><i></i>Metallic</button>
+          <button type="button" data-finish="pearlescent" aria-pressed="false"><i></i>Pearlescent</button>
         </div>
       </div>
     </section>
