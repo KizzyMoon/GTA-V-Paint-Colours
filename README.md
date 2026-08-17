@@ -3,12 +3,12 @@
 A mobile-friendly GTA V/FiveM vehicle paint reference with:
 
 - colour-family filtering (including Purple)
-- search by name, HEX, RGB or native paint ID
-- finish filters and sorting
+- search by colour name, manufacturer, HEX, RGB or pearlescent
+- manufacturer filtering and colour-spectrum sorting
 - persistent browser favourites with a dedicated tab
 - copyable HEX, RGB and FiveM code snippets
 
-The catalogue uses native GTA V vehicle paint values from the community-maintained [gta-v-data-dumps](https://github.com/DurtyFree/gta-v-data-dumps) dataset.
+The catalogue contains 1,134 real manufacturer paint colours sourced from [GTA Colors](https://gtacolors.com), whose values are adjusted to match Rockstar shaders.
 
 ## Run locally
 
