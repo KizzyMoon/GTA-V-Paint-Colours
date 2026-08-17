@@ -51,6 +51,7 @@ function render(){
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("is-active",t.dataset.view===state.view));
 }
 function openDialog(id){ const c=catalogue.find(x=>x.id===id); if(!c)return; state.selected=c; els.dialogSwatch.style.setProperty("--swatch",`#${c.hex}`); els.dialogFamily.textContent=`${c.family} · OEM paint`; els.dialogName.textContent=c.name; els.dialogHex.textContent=`#${c.hex}`; els.dialogRgb.textContent=`${c.r}, ${c.g}, ${c.b}`; els.dialogMaker.textContent=c.maker; els.dialogPearl.textContent=c.pearl||"None"; els.dialogCode.textContent=`SetVehicleCustomPrimaryColour(vehicle, ${c.r}, ${c.g}, ${c.b})`; updateDialogFavourite(); els.colourDialog.showModal(); }
+window.openDialog=openDialog;
 function updateDialogFavourite(){ const fav=state.favourites.has(state.selected.id),btn=els.colourDialog.querySelector(".dialog-favourite"); btn.innerHTML=`<span>${fav?"♥":"♡"}</span> ${fav?"Remove from favourites":"Add to favourites"}`; }
 function resetFilters(){ state.family="all";state.manufacturer="all";state.search="";els.searchInput.value="";els.manufacturerFilter.value="all";render(); }
 
