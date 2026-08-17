@@ -113,20 +113,23 @@
   function loadImage(file) {
     errorBox.textContent="";
     if(!file || !file.type.startsWith("image/")) { errorBox.textContent="Please choose or paste an image file."; return; }
-    const url=URL.createObjectURL(file);
-    const image=new Image();
-    image.onload=() => {
-      const max=1600, scale=Math.min(1,max/Math.max(image.naturalWidth,image.naturalHeight));
-      canvas.width=Math.max(1,Math.round(image.naturalWidth*scale));
-      canvas.height=Math.max(1,Math.round(image.naturalHeight*scale));
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.drawImage(image,0,0,canvas.width,canvas.height);
-      URL.revokeObjectURL(url);
-      placeholder.hidden=true;stage.hidden=false;replaceButton.hidden=false;marker.hidden=true;
-      results.hidden=true;closestSection.hidden=true;
+    const reader=new FileReader();
+    reader.onerror=()=>{ errorBox.textContent="That image could not be read. Try a PNG, JPG or WEBP."; };
+    reader.onload=() => {
+      const image=new Image();
+      image.onload=() => {
+        const max=1600, scale=Math.min(1,max/Math.max(image.naturalWidth,image.naturalHeight));
+        canvas.width=Math.max(1,Math.round(image.naturalWidth*scale));
+        canvas.height=Math.max(1,Math.round(image.naturalHeight*scale));
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(image,0,0,canvas.width,canvas.height);
+        placeholder.hidden=true;stage.hidden=false;replaceButton.hidden=false;marker.hidden=true;
+        results.hidden=true;closestSection.hidden=true;
+      };
+      image.onerror=()=>{ errorBox.textContent="That image could not be opened. Try a PNG, JPG or WEBP."; };
+      image.src=reader.result;
     };
-    image.onerror=()=>{ URL.revokeObjectURL(url);errorBox.textContent="That image could not be opened. Try a PNG, JPG or WEBP."; };
-    image.src=url;
+    reader.readAsDataURL(file);
   }
 
   input.addEventListener("change",()=>loadImage(input.files[0]));
