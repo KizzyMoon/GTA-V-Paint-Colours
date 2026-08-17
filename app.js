@@ -8,8 +8,8 @@ const familyDefinitions = [
   ["grey", "Grey", "#777b82"], ["black", "Black", "#17191d"]
 ];
 
-const state = { view:"all", family:"all", manufacturer:"all", sort:"name", search:"", favourites:new Set(JSON.parse(localStorage.getItem("gta-oem-paint-favourites") || "[]")), selected:null };
-const els = Object.fromEntries(["colourGrid","colourFilters","searchInput","manufacturerFilter","sortSelect","resultsCount","viewTitle","favouriteCount","clearFilters","emptyState","emptyTitle","emptyText","emptyAction","toast","colourDialog","dialogSwatch","dialogFamily","dialogName","dialogHex","dialogRgb","dialogMaker","dialogPearl","dialogCode"].map(id=>[id,document.getElementById(id)]));
+const state = { view:"all", family:"all", finish:"all", manufacturer:"all", sort:"name", search:"", favourites:new Set(JSON.parse(localStorage.getItem("gta-oem-paint-favourites") || "[]")), selected:null };
+const els = Object.fromEntries(["colourGrid","colourFilters","searchInput","manufacturerFilter","sortSelect","resultsCount","viewTitle","favouriteCount","clearFilters","emptyState","emptyTitle","emptyText","emptyAction","toast","colourDialog","dialogSwatch","dialogFamily","dialogName","dialogHex","dialogRgb","dialogMaker","dialogPearl","dialogCode","heroPaintCount"].map(id=>[id,document.getElementById(id)]));
 
 function rgb(hex){ const n=parseInt(hex,16); return [(n>>16)&255,(n>>8)&255,n&255]; }
 function hsl(hex){ const [ri,gi,bi]=rgb(hex),r=ri/255,g=gi/255,b=bi/255,max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min; let h=0; const l=(max+min)/2; if(d){ const s=l>.5?d/(2-max-min):d/(max+min); if(max===r)h=(g-b)/d+(g<b?6:0); else if(max===g)h=(b-r)/d+2; else h=(r-g)/d+4; return [h*60,s,l]; } return [0,0,l]; }
@@ -20,7 +20,8 @@ function familyOf(colour){
   if(name.includes("pink"))return "pink"; if(name.includes("brown")||name.includes("beige")||name.includes("sand")||name.includes("tan")||name.includes("bronze")||name.includes("gold")||name.includes("cream")||name.includes("ivory")||name.includes("straw"))return "brown";
   if(h<15||h>=345)return "red"; if(h<45)return "orange"; if(h<68)return "yellow"; if(h<165)return "green"; if(h<250)return "blue"; if(h<292)return "purple"; if(h<345)return "pink"; return "red";
 }
-function normalise(colour){ const [r,g,b]=rgb(colour.hex); return {...colour,maker:colour.maker.trim(),name:colour.name.trim(),r,g,b,family:familyOf(colour),hue:hsl(colour.hex)[0]}; }
+function finishOf(colour){ const name=colour.name.toLowerCase(); if(/metallic|metallica|metallescent|\bpoly\b|\bmica\b/.test(name))return "metallic"; return colour.pearl?"pearlescent":"solid"; }
+function normalise(colour){ const [r,g,b]=rgb(colour.hex); return {...colour,maker:colour.maker.trim(),name:colour.name.trim(),r,g,b,family:familyOf(colour),finish:finishOf(colour),hue:hsl(colour.hex)[0]}; }
 const catalogue=colours.map(normalise);
 
 function saveFavourites(){ localStorage.setItem("gta-oem-paint-favourites",JSON.stringify([...state.favourites])); els.favouriteCount.textContent=state.favourites.size; }
@@ -38,14 +39,19 @@ function buildManufacturers(){
 }
 function filteredColours(){
   const q=state.search.toLowerCase().replace("#","").trim();
-  const list=catalogue.filter(c=>(state.view!=="favorites"||state.favourites.has(c.id))&&(state.family==="all"||c.family===state.family)&&(state.manufacturer==="all"||c.maker===state.manufacturer)&&(!q||`${c.name} ${c.maker} ${c.pearl} ${c.hex} ${c.r}, ${c.g}, ${c.b}`.toLowerCase().includes(q)));
+  const list=catalogue.filter(c=>(state.view!=="favorites"||state.favourites.has(c.id))&&(state.family==="all"||c.family===state.family)&&(state.finish==="all"||c.finish===state.finish)&&(state.manufacturer==="all"||c.maker===state.manufacturer)&&(!q||`${c.name} ${c.maker} ${c.pearl} ${c.hex} ${c.r}, ${c.g}, ${c.b}`.toLowerCase().includes(q)));
   return list.sort((a,b)=>state.sort==="manufacturer"?(a.maker.localeCompare(b.maker)||a.name.localeCompare(b.name)):state.sort==="hue"?(a.hue-b.hue||a.name.localeCompare(b.name)):a.name.localeCompare(b.name));
 }
-function card(c){ const fav=state.favourites.has(c.id),finish=c.pearl?"Pearlescent":"Solid"; return `<article class="colour-card"><div class="card-swatch" style="--swatch:#${c.hex}" data-details="${c.id}" role="button" tabindex="0" aria-label="View ${c.name} details"><span class="paint-id" title="${c.maker}">${c.maker}</span><button class="favourite-button ${fav?"is-favourite":""}" data-favourite="${c.id}" type="button" aria-label="${fav?"Remove from":"Add to"} favourites">${fav?"♥":"♡"}</button></div><div class="card-body"><div class="card-title"><h3 title="${c.name}">${c.name}</h3><span class="finish-tag">${finish}</span></div><div class="card-values"><span><small>HEX</small><strong>#${c.hex}</strong></span><span><small>RGB</small><strong>${c.r}, ${c.g}, ${c.b}</strong></span><span><small>PEARL</small><strong>${c.pearl||"None"}</strong></span></div><button class="card-copy" data-copy-code="${c.id}" type="button">Copy FiveM code <span>▣</span></button></div></article>`; }
+function card(c){ const fav=state.favourites.has(c.id),finish=c.finish[0].toUpperCase()+c.finish.slice(1); return `<article class="colour-card"><div class="card-swatch" style="--swatch:#${c.hex}" data-details="${c.id}" role="button" tabindex="0" aria-label="View ${c.name} details"><span class="paint-id" title="${c.maker}">${c.maker}</span><button class="favourite-button ${fav?"is-favourite":""}" data-favourite="${c.id}" type="button" aria-label="${fav?"Remove from":"Add to"} favourites">${fav?"♥":"♡"}</button></div><div class="card-body"><div class="card-title"><h3 title="${c.name}">${c.name}</h3><span class="finish-tag">${finish}</span></div><div class="card-values"><span><small>HEX</small><strong>#${c.hex}</strong></span><span><small>RGB</small><strong>${c.r}, ${c.g}, ${c.b}</strong></span><span><small>PEARL</small><strong>${c.pearl||"None"}</strong></span></div><button class="card-copy" data-copy-code="${c.id}" type="button">Copy FiveM code <span>▣</span></button></div></article>`; }
 function render(){
   buildFilters(); saveFavourites(); const list=filteredColours();
-  els.viewTitle.textContent=state.view==="favorites"?"Your favourites":state.family==="all"?"All colours":`${familyDefinitions.find(f=>f[0]===state.family)[1]} colours`;
+  const familyLabel=state.family==="all"?"":familyDefinitions.find(f=>f[0]===state.family)[1];
+  const finishLabel=state.finish==="all"?"":state.finish[0].toUpperCase()+state.finish.slice(1);
+  els.viewTitle.textContent=state.view==="favorites"?"Your favourites":[finishLabel,familyLabel,"colours"].filter(Boolean).join(" ")||"All colours";
   els.resultsCount.textContent=`${list.length} ${list.length===1?"colour":"colours"} shown`;
+  els.heroPaintCount.textContent=list.length.toLocaleString();
+  document.querySelectorAll("[data-finish]").forEach(button=>{ const active=button.dataset.finish===state.finish; button.classList.toggle("is-selected",active); button.setAttribute("aria-pressed",String(active)); });
+  document.querySelector(".hero-showcase").dataset.finish=state.finish;
   els.colourGrid.innerHTML=list.map(card).join(""); els.emptyState.hidden=list.length>0; els.colourGrid.hidden=list.length===0;
   if(!list.length){ const favEmpty=state.view==="favorites"&&state.favourites.size===0; els.emptyTitle.textContent=favEmpty?"No favourites yet":"No colours found"; els.emptyText.textContent=favEmpty?"Tap the heart on any colour to save it here.":"Try changing your filters or search."; els.emptyAction.textContent=favEmpty?"Browse all colours":"Clear filters"; }
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("is-active",t.dataset.view===state.view));
@@ -53,10 +59,11 @@ function render(){
 function openDialog(id){ const c=catalogue.find(x=>x.id===id); if(!c)return; state.selected=c; els.dialogSwatch.style.setProperty("--swatch",`#${c.hex}`); els.dialogFamily.textContent=`${c.family} · OEM paint`; els.dialogName.textContent=c.name; els.dialogHex.textContent=`#${c.hex}`; els.dialogRgb.textContent=`${c.r}, ${c.g}, ${c.b}`; els.dialogMaker.textContent=c.maker; els.dialogPearl.textContent=c.pearl||"None"; els.dialogCode.textContent=`SetVehicleCustomPrimaryColour(vehicle, ${c.r}, ${c.g}, ${c.b})`; updateDialogFavourite(); els.colourDialog.showModal(); }
 window.openDialog=openDialog;
 function updateDialogFavourite(){ const fav=state.favourites.has(state.selected.id),btn=els.colourDialog.querySelector(".dialog-favourite"); btn.innerHTML=`<span>${fav?"♥":"♡"}</span> ${fav?"Remove from favourites":"Add to favourites"}`; }
-function resetFilters(){ state.family="all";state.manufacturer="all";state.search="";els.searchInput.value="";els.manufacturerFilter.value="all";render(); }
+function resetFilters(){ state.family="all";state.finish="all";state.manufacturer="all";state.search="";els.searchInput.value="";els.manufacturerFilter.value="all";render(); }
 
 document.querySelector(".tabs").addEventListener("click",e=>{ const b=e.target.closest("[data-view]");if(!b)return;state.view=b.dataset.view;render(); });
 els.colourFilters.addEventListener("click",e=>{ const b=e.target.closest("[data-family]");if(!b)return;state.family=b.dataset.family;render(); });
+document.querySelector(".finish-preview").addEventListener("click",e=>{ const button=e.target.closest("[data-finish]");if(!button)return;state.finish=state.finish===button.dataset.finish?"all":button.dataset.finish;render(); });
 els.searchInput.addEventListener("input",e=>{state.search=e.target.value;render();});
 els.manufacturerFilter.addEventListener("change",e=>{state.manufacturer=e.target.value;render();});
 els.sortSelect.addEventListener("change",e=>{state.sort=e.target.value;render();});
