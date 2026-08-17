@@ -13,6 +13,8 @@ A mobile-friendly GTA V/FiveM vehicle paint reference with:
 
 The catalogue contains 1,134 real manufacturer paint colours sourced from [GTA Colors](https://gtacolors.com), whose values are adjusted to match Rockstar shaders.
 
+The image picker defaults to 20% compensation because FiveM custom RGB is not the same pipeline as a Rockstar Social Club crew colour. The slider can be moved from direct RGB to the full crew-style correction for server-specific calibration.
+
 ## Run locally
 
 Open `index.html` directly, or serve the folder with any static web server.
