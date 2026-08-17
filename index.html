@@ -28,11 +28,11 @@
       <div>
         <p class="eyebrow">FiveM paint reference</p>
         <h1>Find the right colour.<br><span>Fast.</span></h1>
-        <p class="intro">Filter the native GTA V paint palette by colour family, finish or name. Save the ones you love and copy the exact values you need.</p>
+        <p class="intro">Browse real manufacturer paint colours adjusted for Rockstar shaders. Filter by colour family or manufacturer, save favourites, and copy the exact FiveM values.</p>
       </div>
       <div class="hero-swatch" aria-hidden="true">
         <div class="paint-orb"></div>
-        <span>161</span><small>native paints</small>
+        <span>1,134</span><small>OEM paints</small>
       </div>
     </section>
 
@@ -49,21 +49,16 @@
           <div class="colour-filters" id="colourFilters"></div>
         </div>
         <div class="select-group">
-          <label for="finishFilter">Finish</label>
-          <select id="finishFilter">
-            <option value="all">All finishes</option>
-            <option value="metallic">Metallic</option>
-            <option value="matte">Matte</option>
-            <option value="utility">Utility</option>
-            <option value="worn">Worn</option>
-            <option value="special">Special</option>
+          <label for="manufacturerFilter">Manufacturer</label>
+          <select id="manufacturerFilter">
+            <option value="all">All manufacturers</option>
           </select>
         </div>
         <div class="select-group">
           <label for="sortSelect">Sort by</label>
           <select id="sortSelect">
-            <option value="id">Paint ID</option>
             <option value="name">Name A–Z</option>
+            <option value="manufacturer">Manufacturer</option>
             <option value="hue">Colour spectrum</option>
           </select>
         </div>
@@ -95,15 +90,16 @@
       <div class="detail-grid">
         <button class="copy-detail" data-copy="hex" type="button"><span>HEX</span><strong id="dialogHex"></strong><em>Copy</em></button>
         <button class="copy-detail" data-copy="rgb" type="button"><span>RGB</span><strong id="dialogRgb"></strong><em>Copy</em></button>
-        <div><span>PAINT ID</span><strong id="dialogId"></strong></div>
-        <div><span>FINISH</span><strong id="dialogFinish"></strong></div>
+        <div><span>MANUFACTURER</span><strong id="dialogMaker"></strong></div>
+        <div><span>PEARLESCENT</span><strong id="dialogPearl"></strong></div>
       </div>
       <div class="code-block"><code id="dialogCode"></code><button class="copy-code" type="button">Copy code</button></div>
       <button class="dialog-favourite" type="button"><span>♡</span> Add to favourites</button>
     </div>
   </dialog>
 
-  <footer><p>Native GTA V vehicle paint data. Colours can look different depending on lighting, shaders and vehicle material in FiveM.</p></footer>
+  <footer><p>OEM values sourced from <a href="https://gtacolors.com" target="_blank" rel="noopener">GTA Colors</a> and adjusted for Rockstar shaders. Results can still vary with FiveM lighting and vehicle material.</p></footer>
+  <script src="colors.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
